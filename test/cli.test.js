@@ -38,12 +38,12 @@ test.describe("to formatting", () => {
     assert.equal(result.trim(), "helloWorld");
   });
 
-  test("cli rejects multiple to flags (snake+camel to kebab)", () => {
-    const result = execSync(
-      "node core/cli.js convert --adapter go-case-converter --from kebab --to snake --to camel  --input hello_world",
-    ).toString();
-    // TODO: update assertion
-    assert.equal(result.trim(), "fail!");
+  test("cli rejects multiple passing direct to flags and --to (kebab to camel+snake)", () => {
+    assert.throws(() => {
+      execSync(
+        "node core/cli.js convert --adapter go-case-converter --from kebab --to snake --camel  --input hello_world",
+      );
+    }, /--to snake cannot be passed along with --camel/);
   });
 
 });
