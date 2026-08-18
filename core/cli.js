@@ -36,6 +36,7 @@ Examples:
   rosetta list
   rosetta convert --adapter php-case-converter --from snake --to camel --input hello_world
   rosetta convert --adapter go-case-converter --to pascal --file ./identifiers.txt
+  rosetta convert --adapter go-case-converter --pascal --file ./identifiers.txt
   rosetta convert --pipeline php-case-converter:camel,go-case-converter:kebab --input hello_world
 
 Adapters are discovered under adapters/<language>/adapter.json. See
