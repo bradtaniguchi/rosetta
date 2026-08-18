@@ -5,6 +5,49 @@ const assert = require("node:assert/strict");
 
 const { execSync } = require("node:child_process");
 
+test.describe("to formatting", () => {
+  test("cli accepts single --to flag format (kebab to pascal)", () => {
+    const result = execSync(
+      "node core/cli.js convert --adapter go-case-converter --from kebab --to pascal --input hello-world",
+    ).toString();
+    assert.equal(result.trim(), "HelloWorld");
+  });
+  test("cli accepts single --to flag format (pascal to kebab)", () => {
+    const result = execSync(
+      "node core/cli.js convert --adapter go-case-converter --from pascal --to kebab --input HelloWorld",
+    ).toString();
+    assert.equal(result.trim(), "hello-world");
+  });
+  test("cli accepts direct --camel flag (camel to kebab)", () => {
+    const result = execSync(
+      "node core/cli.js convert --adapter go-case-converter --from camel --to kebab --input helloWorld",
+    ).toString();
+    assert.equal(result.trim(), "hello-world");
+  });
+  test("cli accepts direct --snake flag (snake to camel)", () => {
+    const result = execSync(
+      "node core/cli.js convert --adapter go-case-converter --from kebab --to camel  --input hello_world",
+    ).toString();
+    assert.equal(result.trim(), "helloWorld");
+  });
+
+  test("cli accepts inferred from flag (snake to camel)", () => {
+    const result = execSync(
+      "node core/cli.js convert --adapter go-case-converter --to camel  --input hello_world",
+    ).toString();
+    assert.equal(result.trim(), "helloWorld");
+  });
+
+  test("cli rejects multiple to flags (snake+camel to kebab)", () => {
+    const result = execSync(
+      "node core/cli.js convert --adapter go-case-converter --from kebab --to snake --to camel  --input hello_world",
+    ).toString();
+    // TODO: update assertion
+    assert.equal(result.trim(), "fail!");
+  });
+
+});
+
 test.describe("pipeline", () => {
   test("cli runs a two-stage pipeline in order", () => {
     const result = execSync(
