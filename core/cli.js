@@ -140,6 +140,25 @@ async function convert(flags) {
     return;
   }
 
+  const directToFlags = (() => {
+    const directToFlags = [];
+    if (camel) directToFlags.push('camel');
+    if (snake) directToFlags.push("snake");
+    if (pascal) directToFlags.push("pascal");
+    if (kebab) directToFlags.push("kebab");
+
+    return directToFlags;
+  })()
+
+  if (directToFlags.length > 1) {
+    // if multiple directToFlags are passed at the same time, this is also an error
+     console.error(
+      `Error: multiple direct to flags cannot be passed provide one or the other`,
+    );
+    process.exitCode = 1;
+    return;
+  }
+
   let text = typeof input === "string" ? input : undefined;
   if (file) {
     try {

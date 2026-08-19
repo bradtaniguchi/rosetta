@@ -46,6 +46,13 @@ test.describe("to formatting", () => {
     }, /--to snake cannot be passed along with --camel/);
   });
 
+  test("cli rejects multiple direct to flags and --to (kebab to camel+snake)", () => {
+			assert.throws(() => {
+				execSync(
+					"node core/cli.js convert --adapter go-case-converter --from kebab --snake --camel  --input hello_world",
+				);
+			}, /multiple direct to flags cannot be passed provide one or the other/);
+		});
 });
 
 test.describe("pipeline", () => {
