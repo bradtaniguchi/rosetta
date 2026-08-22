@@ -157,6 +157,36 @@ func TestTokenize(t *testing.T) {
 			expected: []string{"hello", "world", "foo"},
 		},
 		{
+			name:     "camelCase handles acronyms correctly",
+			input:    "HTTPServer",
+			expected: []string{"http", "server"},
+		},
+		{
+			name:     "PascalCase handles acronyms correctly",
+			input:    "HTTPServer",
+			expected: []string{"http", "server"},
+		},
+		{
+			name:     "camelCase handles acronyms in middle",
+			input:    "getHTTPResponse",
+			expected: []string{"get", "http", "response"},
+		},
+		{
+			name:     "camelCase handles acronyms at end",
+			input:    "serveHTTP",
+			expected: []string{"serve", "http"},
+		},
+		{
+			name:     "all-caps acronym returns single token",
+			input:    "HTTP",
+			expected: []string{"http"},
+		},
+		{
+			name:     "two-letter acronyms handled correctly",
+			input:    "IPAddress",
+			expected: []string{"ip", "address"},
+		},
+		{
 			name:     "PascalCase splits on uppercase boundaries",
 			input:    "HelloWorldFoo",
 			expected: []string{"hello", "world", "foo"},

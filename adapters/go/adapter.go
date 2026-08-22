@@ -84,6 +84,8 @@ func GetToFormat(o RequestOptions) (string, error) {
 // Tokenize breaks an identifier into lowercase word tokens, regardless of
 // its original case style.
 func Tokenize(identifier string) []string {
+	// TODO: using a string rather than rune[] might lead to byte-indexing bugs.
+	// This should be flagged in another issue.
 	identifier = strings.TrimSpace(identifier)
 
 	var parts []string
@@ -95,9 +97,27 @@ func Tokenize(identifier string) []string {
 	default:
 		// camelCase / PascalCase: insert a space before every interior
 		// capital letter, then split on whitespace.
+		// Unless the previous identifier is also uppercase and the next identifier is also uppercase
+		// in which case we don't split (to handle acronyms like "HTTPServer").
 		var b strings.Builder
 		for i, r := range identifier {
-			if i > 0 && unicode.IsUpper(r) {
+			var previousIdentifier rune
+			if i > 0 {
+				previousIdentifier = rune(identifier[i-1])
+			}
+
+			var nextIdentifier rune
+			hasNextChar := i < len(identifier)-1
+			if hasNextChar {
+				nextIdentifier = rune(identifier[i+1])
+			}
+
+			isUpperChar := i > 0 && unicode.IsUpper(r)
+			followsLower := !unicode.IsUpper(previousIdentifier)
+
+			precedesLower := hasNextChar && unicode.IsLower(nextIdentifier)
+
+			if addSpaceBefore := isUpperChar && (followsLower || precedesLower); addSpaceBefore {
 				b.WriteRune(' ')
 			}
 			b.WriteRune(r)
