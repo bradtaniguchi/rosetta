@@ -192,6 +192,16 @@ func TestTokenize(t *testing.T) {
 			expected: []string{"hello", "world", "foo"},
 		},
 		{
+			name:     "handles multi-byte unicode characters",
+			input:    "caféAuLait",
+			expected: []string{"café", "au", "lait"},
+		},
+		{
+			name:     "handles multi-byte unicode characters with acronyms",
+			input:    "HTTPÜberServer",
+			expected: []string{"http", "über", "server"},
+		},
+		{
 			name:     "single word returns single token",
 			input:    "hello",
 			expected: []string{"hello"},
